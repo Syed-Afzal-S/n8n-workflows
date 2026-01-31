@@ -1,0 +1,152 @@
+{
+  "updatedAt": "2026-01-31T17:08:36.437Z",
+  "createdAt": "2026-01-31T17:02:10.408Z",
+  "id": "1hprITCmOHCw2C3shMMUS",
+  "name": "My workflow 8",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "05b35369-018b-4125-92e2-60bd9952d3c9",
+      "name": "Daily Backup",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "31393a17-d0fc-4e88-b67e-5857e832df1c",
+      "name": "Get All Workflows",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -32
+      ],
+      "credentials": {
+        "n8nApi": {
+          "id": "ibiogmSQ2GfETcXq",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "afzal-tech-it",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-workflows",
+          "mode": "name"
+        },
+        "filePath": "=workflows/{{ $json.name.replace(/[^a-z0-9]/gi, '_').toLowerCase() }}.json",
+        "fileContent": "={{ JSON.stringify($json, null, 2) }}",
+        "commitMessage": "=Backup: {{ $json.name }} - {{ $now.toFormat('yyyy-MM-dd') }}"
+      },
+      "id": "2958fdcd-c9a8-43ea-a18b-d369b61c97f8",
+      "name": "Push to GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -48
+      ],
+      "webhookId": "dc6c87ea-b210-428f-8611-68b10427e528",
+      "credentials": {
+        "githubApi": {
+          "id": "b9iHxfziwkdx2WsD",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "876fb04f-7c38-4a8b-bbef-cb5ec275697f",
+      "name": "Split in Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -32
+      ]
+    }
+  ],
+  "connections": {
+    "Daily Backup": {
+      "main": [
+        [
+          {
+            "node": "Get All Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Workflows": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split in Batches": {
+      "main": [
+        [
+          {
+            "node": "Push to GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "eb14a675-017d-458c-bf32-49cc3c24bd81",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-01-31T17:02:10.421Z",
+      "createdAt": "2026-01-31T17:02:10.421Z",
+      "role": "workflow:owner",
+      "workflowId": "1hprITCmOHCw2C3shMMUS",
+      "projectId": "EmupU9KkM3yYgVxD"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
